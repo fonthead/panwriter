@@ -19,7 +19,8 @@
   grid-column-gap: 5px;
   align-items: center;
 }
-.toolbar:hover > .toolbararea {
+.toolbar:hover > .toolbararea,
+.no-autohide-title-bar .toolbar > .toolbararea {
   -webkit-app-region: drag;
   transition: opacity 0.12s ease-in;
   opacity: 1;

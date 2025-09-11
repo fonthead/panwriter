@@ -1,4 +1,4 @@
-import { createRef, useEffect, useReducer } from 'react'
+import { createRef, useEffect, useReducer, useState } from 'react'
 
 import { defaultSettings, AppState }     from '../../appState/AppState'
 import { appStateReducer }  from '../../appState/appStateReducer'
@@ -7,6 +7,7 @@ import { Editor }       from '../Editor/Editor'
 import { MetaEditor }   from '../MetaEditor/MetaEditor'
 import { Preview }      from '../Preview/Preview'
 import { Toolbar }      from '../Toolbar/Toolbar'
+import { SettingsModal } from '../Settings/Settings'
 import { IpcApi } from '../../../electron/preload'
 import { renderPreview } from '../../renderPreview/renderPreview'
 
@@ -23,6 +24,7 @@ declare global {
 
 export const App = () => {
   const [state, dispatch] = useReducer(appStateReducer, initialState)
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false)
   window.ipcApi?.setStateAndDispatch(state, dispatch)
 
   useEffect(() => {
@@ -40,8 +42,12 @@ export const App = () => {
   }, [])
 
   return (
-    <div className={`app ${state.split.toLowerCase()}`}>
-      <Toolbar state={state} dispatch={dispatch} />
+    <div className={`app ${state.split.toLowerCase()} ${state.settings.autoHideTitleBar ? '' : 'no-autohide-title-bar'}`}>
+      <Toolbar
+        state={state}
+        dispatch={dispatch}
+        onSettingsClick={() => setSettingsModalOpen(true)}
+      />
       <div className='editor'>
         { state.metaEditorOpen
           ? <MetaEditor state={state} dispatch={dispatch} />
@@ -52,6 +58,13 @@ export const App = () => {
         ref={state.previewDivRef}
         paginated={state.paginated}
         />
+      { settingsModalOpen &&
+        <SettingsModal
+          settings={state.settings}
+          dispatch={dispatch}
+          onClose={() => setSettingsModalOpen(false)}
+        />
+      }
     </div>
   );
 }
