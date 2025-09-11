@@ -57,6 +57,7 @@ const ipcApi = {
   , minimize:         () => ipcRenderer.send('minimize')
   , maximize:         () => ipcRenderer.send('maximize')
   , openLink:         (lnk: string) => { if (typeof lnk === 'string') ipcRenderer.send('openLink', lnk) }
+  , saveSettings:     (settings: Settings) => ipcRenderer.send('saveSettings', settings)
   }
 , on: {
     addBold:          (cb: () => void)          => ipcRenderer.on('addBold',          cb)

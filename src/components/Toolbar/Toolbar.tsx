@@ -11,15 +11,17 @@ import notes           from './notes.svg'
 import page            from './page.svg'
 import verticalSplit   from './vertical_split.svg'
 import visibility      from './visibility.svg'
+import settingsIcon    from './settings.svg'
 import './Toolbar.css'
 
 interface Props {
   state: AppState;
   dispatch: React.Dispatch<Action>;
+  onSettingsClick: () => void;
 }
 
 export const Toolbar = (props: Props) => {
-  const { state, dispatch } = props
+  const { state, dispatch, onSettingsClick } = props
   const { doc, metaEditorOpen, split, paginated } = state
   const { fileName, fileDirty } = doc
   return (
@@ -48,6 +50,11 @@ export const Toolbar = (props: Props) => {
             : null }
         </div>
         <div className='btns'>
+          <div>
+            <Button onClick={onSettingsClick}>
+              <img alt='Settings' src={settingsIcon} />
+            </Button>
+          </div>
           <div>
             { split !== 'onlyEditor'
               ? <Button

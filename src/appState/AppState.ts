@@ -38,8 +38,10 @@ export type ViewSplit = typeof viewSplits[number]
 
 export interface Settings {
   autoUpdateApp: boolean;
+  autoHideTitleBar: boolean;
 }
 
 export const defaultSettings: Settings = {
-  autoUpdateApp: true
+  autoUpdateApp: true,
+  autoHideTitleBar: true
 }

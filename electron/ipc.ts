@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain, shell } from 'electron'
-import { Doc } from '../src/appState/AppState'
+import { Doc, Settings } from '../src/appState/AppState'
 import { readDataDirFile } from './dataDir'
+import { saveSettings } from './settings'
 import { Message } from './preload'
 
 // this file contains the IPC functionality of the main process.
@@ -30,6 +31,10 @@ export const init = () => {
   ipcMain.handle('readDataDirFile', async (_event, fileName: string) => {
     const [ meta ] = await readDataDirFile(fileName)
     return meta
+  })
+
+  ipcMain.on('saveSettings', (_event, settings: Settings) => {
+    saveSettings(settings)
   })
 }
 

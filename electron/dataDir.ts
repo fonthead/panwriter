@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises'
+import { readFile, writeFile } from 'fs/promises'
 import * as jsYaml from 'js-yaml'
 import { app } from 'electron'
 import { basename, sep } from 'path'
@@ -25,5 +25,16 @@ export const readDataDirFile = async (fileName: string): Promise<[Meta | undefin
   } catch(e) {
     console.warn("Error loading or parsing YAML file." + (e as Error).message)
     return [ undefined, fileName ]
+  }
+}
+
+export const writeDataDirFile = async (fileName: string, data: any): Promise<void> => {
+  try {
+    // make sure only PanWriterUserData directory can be accessed
+    fileName = dataDir + basename(fileName)
+    const str = jsYaml.dump(data)
+    await writeFile(fileName, str, 'utf8')
+  } catch (e) {
+    console.warn("Error writing YAML file." + (e as Error).message)
   }
 }

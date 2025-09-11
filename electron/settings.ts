@@ -1,5 +1,9 @@
 import { defaultSettings, Settings } from '../src/appState/AppState'
-import { readDataDirFile } from './dataDir'
+import { readDataDirFile, writeDataDirFile } from './dataDir'
+
+export const saveSettings = async (settings: Settings) => {
+  await writeDataDirFile('settings.yaml', settings)
+}
 
 export const loadSettings = async (): Promise<Settings> => {
   const [data] = await readDataDirFile('settings.yaml')
@@ -7,8 +11,9 @@ export const loadSettings = async (): Promise<Settings> => {
 }
 
 const parseSettings = (data: Record<string, unknown> = {}): Settings => {
-  const { autoUpdateApp } = data
+  const { autoUpdateApp, autoHideTitleBar } = data
   return {
-    autoUpdateApp: autoUpdateApp === undefined ? defaultSettings.autoUpdateApp : !!autoUpdateApp
+    autoUpdateApp: autoUpdateApp === undefined ? defaultSettings.autoUpdateApp : !!autoUpdateApp,
+    autoHideTitleBar: autoHideTitleBar === undefined ? defaultSettings.autoHideTitleBar : !!autoHideTitleBar
   }
 }

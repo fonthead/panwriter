@@ -24,6 +24,12 @@ export const appStateReducer = (state: AppState, action: Action): AppState => {
       const { settings } = action
       return { ...state, settings }
     }
+    case 'setSetting': {
+      const { key, value } = action.payload
+      const settings = { ...state.settings, [key]: value }
+      window.ipcApi?.send.saveSettings(settings)
+      return { ...state, settings }
+    }
     case 'setMdAndRender': {
       const { md } = action
       const doc = {

@@ -9,6 +9,13 @@ export type Action = {
   settings: Settings;
 }
 | {
+  type: 'setSetting';
+  payload: {
+    key: keyof Settings;
+    value: any;
+  };
+}
+| {
   type: 'loadSettings';
   settings: Settings;
 }
