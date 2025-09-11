@@ -47,9 +47,9 @@ const render = async (state: AppState): Promise<Window | undefined> => {
   const previewDiv = previewDivRef.current
   if (previewDiv) {
     if (paginated) {
-      return renderPaged(doc, previewDiv)
+      return renderPaged(state, previewDiv)
     } else {
-      return renderPlain(doc, previewDiv)
+      return renderPlain(state, previewDiv)
     }
   }
 }

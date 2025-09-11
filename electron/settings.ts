@@ -11,9 +11,12 @@ export const loadSettings = async (): Promise<Settings> => {
 }
 
 const parseSettings = (data: Record<string, unknown> = {}): Settings => {
-  const { autoUpdateApp, autoHideTitleBar } = data
+  const { autoUpdateApp, autoHideTitleBar, editorFont, editorFontSize, globalCSS } = data
   return {
     autoUpdateApp: autoUpdateApp === undefined ? defaultSettings.autoUpdateApp : !!autoUpdateApp,
-    autoHideTitleBar: autoHideTitleBar === undefined ? defaultSettings.autoHideTitleBar : !!autoHideTitleBar
+    autoHideTitleBar: autoHideTitleBar === undefined ? defaultSettings.autoHideTitleBar : !!autoHideTitleBar,
+    editorFont: typeof editorFont === 'string' ? editorFont : defaultSettings.editorFont,
+    editorFontSize: typeof editorFontSize === 'number' ? editorFontSize : defaultSettings.editorFontSize,
+    globalCSS: typeof globalCSS === 'string' ? globalCSS : defaultSettings.globalCSS,
   }
 }

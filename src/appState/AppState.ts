@@ -39,9 +39,15 @@ export type ViewSplit = typeof viewSplits[number]
 export interface Settings {
   autoUpdateApp: boolean;
   autoHideTitleBar: boolean;
+  editorFont: string;
+  editorFontSize: number;
+  globalCSS: string;
 }
 
 export const defaultSettings: Settings = {
   autoUpdateApp: true,
-  autoHideTitleBar: true
+  autoHideTitleBar: true,
+  editorFont: 'Fira Code',
+  editorFontSize: 14,
+  globalCSS: ''
 }

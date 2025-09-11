@@ -1,4 +1,4 @@
-import { Doc } from '../appState/AppState'
+import { AppState } from '../appState/AppState'
 import { getCss } from './templates/getCss'
 
 let singleFrame: HTMLIFrameElement | undefined
@@ -111,10 +111,11 @@ const renderAndSwap = async (
 }
 
 
-export const renderPlain = async (doc: Doc, previewDiv: HTMLDivElement): Promise<Window> => {
+export const renderPlain = async (state: AppState, previewDiv: HTMLDivElement): Promise<Window> => {
+  const { doc } = state;
   const { contentWindow } = await setupSingleFrame(previewDiv);
   const content = [
-          '<style>', await getCss(doc), '</style>'
+          '<style>', await getCss(state), '</style>'
         , doc.meta['header-includes']
         , doc.html
         ].join('')
@@ -153,10 +154,11 @@ const pagedjsStyleEl = createStyleEl(`
 }
 `);
 
-export const renderPaged = async (doc: Doc, previewDiv: HTMLDivElement): Promise<Window> => {
+export const renderPaged = async (state: AppState, previewDiv: HTMLDivElement): Promise<Window> => {
+  const { doc } = state;
   return renderAndSwap(previewDiv, async frameWindow => {
 
-    const cssStr     = await getCss(doc)
+    const cssStr     = await getCss(state)
         , metaHtml   = doc.meta['header-includes']
         , content    = doc.html
         , frameHead  = frameWindow.document.head

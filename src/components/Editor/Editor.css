@@ -1,9 +1,9 @@
 @import './codemirror.css'; /* https://github.com/codemirror/CodeMirror/blob/master/lib/codemirror.css */
 
 .CodeMirror {
-  font-family: var(--mono-font);
+  font-family: var(--editor-font-family, var(--mono-font));
   color: var(--font-color);
-  font-size: 17px;
+  font-size: var(--editor-font-size, 17px);
   line-height: 1.8em;
 }
 div.CodeMirror {

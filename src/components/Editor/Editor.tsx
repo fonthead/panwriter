@@ -23,17 +23,27 @@ interface Props {
 
 export const Editor = (props: Props) => {
   const { state, dispatch } = props
+  const { settings } = state;
+
+  const wrapperStyle: React.CSSProperties = {
+    '--editor-font-family': settings.editorFont,
+    '--editor-font-size': `${settings.editorFontSize}px`,
+    height: '100%',
+  } as React.CSSProperties;
+
   return (
-    <CodeMirror
-      onBeforeChange={ (_ed, _diff, md) =>
-        dispatch({ type: 'setMdAndRender', md })
-      }
-      onScroll={scrollPreview}
-      editorDidMount={onEditorDidMount}
-      value={state.doc.md}
-      autoCursor={true}
-      options={codeMirrorOptions}
-      />
+    <div style={wrapperStyle}>
+      <CodeMirror
+        onBeforeChange={ (_ed, _diff, md) =>
+          dispatch({ type: 'setMdAndRender', md })
+        }
+        onScroll={scrollPreview}
+        editorDidMount={onEditorDidMount}
+        value={state.doc.md}
+        autoCursor={true}
+        options={codeMirrorOptions}
+        />
+    </div>
   )
 }
 
