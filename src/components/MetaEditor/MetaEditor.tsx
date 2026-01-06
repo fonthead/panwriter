@@ -54,16 +54,23 @@ export const MetaEditor = (props: Props) => {
       {renderInput(kv)}
     </Fragment>
 
-  const renderInput = (kv: Kv): JSX.Element => {
+  const renderInput = (kv: Kv | undefined, isGlobal?: boolean): JSX.Element => {
+    if (!kv) return <span />
     const { onLoad, onDone, placeholder } = kv
     const key = kv.name
-    const val = doc.meta[key]?.toString() || defaultVars[key] || ''
+
+    // Always read from global settings first, then check YAML frontmatter for overrides
+    const globalVal = settings.previewStyles?.[key]?.toString() || (defaultVars as any)?.[key] || ''
+    const yamlVal = doc.meta[key]?.toString()
+    const val = yamlVal || globalVal
+
     const value = onLoad ? onLoad(val) : val
     const onChange = (
       e: string | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
       const v = typeof e === 'string' ? e : e.target.value
-      dispatch({ type: 'setMetaAndRender', key, value: onDone ? onDone(v) : v })
+      // Layout tab always updates global settings
+      dispatch({ type: 'setPreviewStyle', payload: { key, value: onDone ? onDone(v) : v } })
     }
     const common = { id: kv.name, placeholder, value, onChange }
     switch (kv.type) {
@@ -132,7 +139,7 @@ export const MetaEditor = (props: Props) => {
         {activeTab === 'layout' && (
           <div className='tab-pane'>
             <h2>Layout & Style</h2>
-            <p className='description'>Customize the appearance of the document preview.</p>
+            <p className='description'>Global preview styles. These apply to all documents unless overridden in YAML frontmatter.</p>
             {state.paginated && (
               <p className='warning'>
                 Custom colors might not be visible in paginated mode.

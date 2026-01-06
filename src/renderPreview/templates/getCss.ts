@@ -1,4 +1,4 @@
-import { Doc } from '../../appState/AppState'
+import { Doc, Settings } from '../../appState/AppState'
 import { parseToTemplate, interpolateTemplate, extractDefaultVars } from './templates'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import styles from '!!raw-loader!../../assets/preview.pandoc-styles.css'
@@ -26,8 +26,10 @@ const headerIncludesCssFromDataDirFile = async (doc: Doc): Promise<string> => {
   return headerIncludes
 }
 
-export const getCss = async (doc: Doc): Promise<string> =>
-  interpolateTemplate(template, doc.meta) + (await headerIncludesCssFromDataDirFile(doc))
+export const getCss = async (doc: Doc, settings?: Settings): Promise<string> => {
+  const meta = { ...settings?.previewStyles, ...doc.meta }
+  return interpolateTemplate(template, meta) + (await headerIncludesCssFromDataDirFile(doc))
+}
 
 export const stripSurroundingStyleTags = (s: string): string =>
   s.startsWith('<style>\n') && s.endsWith('\n</style>') ? s.slice(8, -9) : s

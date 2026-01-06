@@ -39,9 +39,11 @@ export type ViewSplit = typeof viewSplits[number]
 export interface Settings {
   autoUpdateApp: boolean;
   autoHideTitleBar: boolean;
+  previewStyles: Meta;
 }
 
 export const defaultSettings: Settings = {
   autoUpdateApp: true,
-  autoHideTitleBar: true
+  autoHideTitleBar: true,
+  previewStyles: {}
 }

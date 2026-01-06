@@ -1,4 +1,4 @@
-import { defaultSettings, Settings } from '../src/appState/AppState'
+import { defaultSettings, Meta, Settings } from '../src/appState/AppState'
 import { readDataDirFile, writeDataDirFile } from './dataDir'
 
 export const saveSettings = async (settings: Settings) => {
@@ -11,9 +11,10 @@ export const loadSettings = async (): Promise<Settings> => {
 }
 
 const parseSettings = (data: Record<string, unknown> = {}): Settings => {
-  const { autoUpdateApp, autoHideTitleBar } = data
+  const { autoUpdateApp, autoHideTitleBar, previewStyles } = data
   return {
     autoUpdateApp: autoUpdateApp === undefined ? defaultSettings.autoUpdateApp : !!autoUpdateApp,
-    autoHideTitleBar: autoHideTitleBar === undefined ? defaultSettings.autoHideTitleBar : !!autoHideTitleBar
+    autoHideTitleBar: autoHideTitleBar === undefined ? defaultSettings.autoHideTitleBar : !!autoHideTitleBar,
+    previewStyles: (previewStyles as Meta) || defaultSettings.previewStyles
   }
 }

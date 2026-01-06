@@ -1,4 +1,4 @@
-import { Doc } from '../appState/AppState'
+import { Doc, Settings } from '../appState/AppState'
 import { getCss } from './templates/getCss'
 
 let singleFrame: HTMLIFrameElement | undefined
@@ -7,8 +7,8 @@ let singleFrame: HTMLIFrameElement | undefined
   ;
 
 const injectMathCss = (contentWindow: Window) =>
-  [ './katex/katex.min.css', './katex/texmath.css'].forEach(href =>
-    contentWindow.document.head.appendChild( createLinkEl(href) )
+  ['./katex/katex.min.css', './katex/texmath.css'].forEach(href =>
+    contentWindow.document.head.appendChild(createLinkEl(href))
   )
 
 const interceptClicks = (contentWindow: Window, e: MouseEvent) => {
@@ -40,8 +40,8 @@ const interceptClicks = (contentWindow: Window, e: MouseEvent) => {
 
 async function insertFrame(
   src: string
-, target: HTMLElement
-, noScriptsInFrame: boolean
+  , target: HTMLElement
+  , noScriptsInFrame: boolean
 ): Promise<HTMLIFrameElement> {
   const frame = document.createElement('iframe')
   if (noScriptsInFrame) {
@@ -92,7 +92,7 @@ const setupSwapFrames = async (target: HTMLElement) => {
 
 const renderAndSwap = async (
   previewDiv: HTMLDivElement
-, renderFn: (w: Window) => Promise<Window>
+  , renderFn: (w: Window) => Promise<Window>
 ): Promise<Window> => {
   const [f1, f2] = await setupSwapFrames(previewDiv)
   if (!f1.contentWindow) {
@@ -111,13 +111,13 @@ const renderAndSwap = async (
 }
 
 
-export const renderPlain = async (doc: Doc, previewDiv: HTMLDivElement): Promise<Window> => {
+export const renderPlain = async (doc: Doc, settings: Settings, previewDiv: HTMLDivElement): Promise<Window> => {
   const { contentWindow } = await setupSingleFrame(previewDiv);
   const content = [
-          '<style>', await getCss(doc), '</style>'
-        , doc.meta['header-includes']
-        , doc.html
-        ].join('')
+    '<style>', await getCss(doc, settings), '</style>'
+    , doc.meta['header-includes']
+    , doc.html
+  ].join('')
   if (!contentWindow) {
     throw Error('contentWindow was undefined in renderPlain')
   }
@@ -153,15 +153,15 @@ const pagedjsStyleEl = createStyleEl(`
 }
 `);
 
-export const renderPaged = async (doc: Doc, previewDiv: HTMLDivElement): Promise<Window> => {
+export const renderPaged = async (doc: Doc, settings: Settings, previewDiv: HTMLDivElement): Promise<Window> => {
   return renderAndSwap(previewDiv, async frameWindow => {
 
-    const cssStr     = await getCss(doc)
-        , metaHtml   = doc.meta['header-includes']
-        , content    = doc.html
-        , frameHead  = frameWindow.document.head
-        , frameBody  = frameWindow.document.body
-        ;
+    const cssStr = await getCss(doc, settings)
+      , metaHtml = doc.meta['header-includes']
+      , content = doc.html
+      , frameHead = frameWindow.document.head
+      , frameBody = frameWindow.document.body
+      ;
 
     // Unfortunately, pagedjs removes our style elements from <head>
     // and appends its transformed styles – on each render. Thus we not only
@@ -171,7 +171,7 @@ export const renderPaged = async (doc: Doc, previewDiv: HTMLDivElement): Promise
 
     // repopulate styles
     injectMathCss(frameWindow)
-    frameHead.appendChild( createStyleEl(cssStr) )
+    frameHead.appendChild(createStyleEl(cssStr))
     if (typeof metaHtml === 'string') {
       frameHead.insertAdjacentHTML('beforeend', metaHtml)
     }
@@ -194,7 +194,7 @@ export const renderPaged = async (doc: Doc, previewDiv: HTMLDivElement): Promise
       if (frameWindow.document.readyState === 'complete') {
         resolve(undefined)
       } else {
-        frameWindow.addEventListener('load', resolve, {once: true})
+        frameWindow.addEventListener('load', resolve, { once: true })
       }
     })
 

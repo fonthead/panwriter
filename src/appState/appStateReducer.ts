@@ -1,4 +1,4 @@
-import { AppState } from './AppState'
+import { AppState, defaultSettings } from './AppState'
 import { clearPreview, refreshEditor } from '../renderPreview/scrolling'
 import { parseYaml, serializeMetaToMd } from '../renderPreview/convertYaml'
 import { Action } from './Action'
@@ -15,18 +15,29 @@ export const appStateReducer = (state: AppState, action: Action): AppState => {
       return { ...state, doc }
     }
     case 'initDoc': {
-      const { settings } = action
+      const settings = { ...defaultSettings, ...action.settings }
+      if (!settings.previewStyles) settings.previewStyles = {}
       const { md } = action.doc
       const doc = { ...state.doc, ...action.doc, ...parseYaml(md) }
       return { ...state, doc, settings }
     }
     case 'loadSettings': {
-      const { settings } = action
+      const settings = { ...defaultSettings, ...action.settings }
+      if (!settings.previewStyles) settings.previewStyles = {}
       return { ...state, settings }
     }
     case 'setSetting': {
       const { key, value } = action.payload
       const settings = { ...state.settings, [key]: value }
+      window.ipcApi?.send.saveSettings(settings)
+      return { ...state, settings }
+    }
+    case 'setPreviewStyle': {
+      const { key, value } = action.payload
+      const settings = {
+        ...state.settings,
+        previewStyles: { ...state.settings.previewStyles, [key]: value }
+      }
       window.ipcApi?.send.saveSettings(settings)
       return { ...state, settings }
     }
